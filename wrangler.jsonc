@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers config. Serves the static site as assets, with no
+  // custom fetch logic, so there is no "main" worker script.
+  "name": "114g5xcom",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  }
+}

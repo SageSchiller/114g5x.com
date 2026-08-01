@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>114g5x // RECRUIT</title>
+<meta name="description" content="Vetting process for prospective operators. Standards are flexible.">
+<meta name="theme-color" content="#05070a">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="classif"><span>// RECRUITMENT CHANNEL // VETTING IN PROGRESS // STANDARDS RIGOROUS // STANDARDS NEGOTIABLE // STANDARDS, FRANKLY, WAIVED //</span></div>
+
+<nav class="top">
+  <span class="brand">114g5x</span>
+  <span class="links">
+    <a href="index.html">Operations</a>
+    <a href="roster.html">Roster</a>
+    <a href="ops.html">Engagements</a>
+    <a href="recruit.html" class="active">Recruit</a>
+  </span>
+  <button class="squad" type="button" aria-pressed="false">
+    <span class="sw"></span><span class="lbl">SOLO MODE</span>
+  </button>
+</nav>
+
+<div class="wrap">
+
+  <section style="padding-top:40px;">
+    <div class="eyebrow">Restricted Access</div>
+    <h2 class="glitch" data-text="JOIN THE UNIT">JOIN THE UNIT</h2>
+    <p class="muted" style="max-width:62ch;">
+      114g5x maintains a rigorous vetting process designed to admit only
+      operators of the highest caliber. It has admitted one person. That
+      person designed the process.
+    </p>
+  </section>
+
+  <section class="rv">
+    <div class="grid">
+      <div class="glass notch tilt" style="padding:26px;">
+        <h3 data-scramble>REQUIREMENTS</h3>
+        <ul class="small" style="padding-left:18px;margin:0;">
+          <li>A pulse</li>
+          <li>A machine of some kind</li>
+          <li>Willingness to be last together rather than last alone</li>
+          <li>Tolerance for silence in voice chat lasting up to nine hours</li>
+        </ul>
+      </div>
+      <div class="glass notch tilt" style="padding:26px;">
+        <h3 data-scramble>DISQUALIFIERS</h3>
+        <ul class="small" style="padding-left:18px;margin:0;">
+          <li>Being good at this</li>
+          <li>Wanting to win</li>
+          <li>Suggesting we start earlier than the final six hours</li>
+          <li>Any prior top-ten finish, anywhere, ever</li>
+        </ul>
+      </div>
+      <div class="glass notch tilt" style="padding:26px;">
+        <h3 data-scramble>WHAT WE OFFER</h3>
+        <ul class="small" style="padding-left:18px;margin:0;">
+          <li>Immediate seniority</li>
+          <li>Your choice of title, all are available</li>
+          <li>A group chat that will finally have two people in it</li>
+          <li>Snacks, correctly prioritized above strategy</li>
+        </ul>
+      </div>
+      <div class="glass notch tilt" style="padding:26px;">
+        <h3 data-scramble>ADVANCEMENT</h3>
+        <ul class="small" style="padding-left:18px;margin:0;">
+          <li>Instant. There is no ladder.</li>
+          <li>You would be co-lead by default.</li>
+          <li>The org chart is a single horizontal line.</li>
+          <li>The line is currently one pixel long.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="rv">
+    <div class="eyebrow">Screening</div>
+    <div class="glass notch">
+      <h2 style="font-size:20px;">Aptitude Assessment</h2>
+      <p class="small">Answer honestly. There is no scoring mechanism. There
+      is no submission endpoint. Nothing you click on this page is recorded
+      or transmitted, which is also true of every other page here.</p>
+
+      <div id="quiz" style="margin-top:24px;">
+        <div class="q" style="margin-bottom:22px;">
+          <p style="color:#fff;margin-bottom:12px;">01 // A challenge has been unsolved for six hours. You:</p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn" type="button" data-a="Correct. This is the doctrine.">Keep going</button>
+            <button class="btn" type="button" data-a="Also correct. Same outcome, less suffering.">Order food</button>
+            <button class="btn pink" type="button" data-a="Rejected. Reading the hint is admitting the hint exists.">Read the hint</button>
+          </div>
+        </div>
+
+        <div class="q" style="margin-bottom:22px;">
+          <p style="color:#fff;margin-bottom:12px;">02 // The scoreboard freezes. You are 41st of 43. You:</p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn" type="button" data-a="Correct. Hold the position. Deny the area.">Hold position</button>
+            <button class="btn" type="button" data-a="Acceptable. Morale is a resource.">Celebrate anyway</button>
+            <button class="btn pink" type="button" data-a="Rejected. Ambition is a disqualifying trait here.">Push for 40th</button>
+          </div>
+        </div>
+
+        <div class="q">
+          <p style="color:#fff;margin-bottom:12px;">03 // Someone asks what your team name means. You:</p>
+          <div class="btn-row" style="margin-top:0;">
+            <button class="btn" type="button" data-a="Correct. The name is the honest answer.">Explain it fully</button>
+            <button class="btn" type="button" data-a="Acceptable. Mystique has value.">Say nothing</button>
+            <button class="btn pink" type="button" data-a="Rejected. We do not claim it is Sumerian.">Claim it is ancient Sumerian</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="verdict" class="glass" style="margin-top:26px;display:none;padding:20px 22px;">
+        <div class="eyebrow" style="margin-bottom:8px;">Assessment</div>
+        <p id="verdict-text" style="margin:0;color:#fff;"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rv">
+    <div class="glass notch" style="text-align:center;padding:44px 32px;">
+      <h2 style="margin-bottom:12px;">There is no application form.</h2>
+      <p class="muted" style="max-width:54ch;margin:0 auto 6px auto;">
+        This site collects nothing and sends nothing. If you actually want in,
+        you already know where to find the sysop, and if you do not, that is
+        arguably the first screening test.
+      </p>
+      <p class="small" style="max-width:54ch;margin:14px auto 0 auto;">
+        Vacancy 05, "Second Opinion," remains the highest-value unfilled
+        position and requires no technical skill whatsoever.
+      </p>
+      <div class="btn-row" style="justify-content:center;">
+        <a class="btn" href="roster.html">Review Open Positions</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  114g5x // <span data-solo="I CAMP, AND LAG, AND SUCK" data-squad="WE CAMP, AND LAG, AND SUCK"></span><br>
+  <span style="opacity:0.6">Satire. A CTF team page. No systems here, or anywhere, have been harmed by us.</span>
+</footer>
+
+<script src="bg.js"></script>
+<script src="script.js"></script>
+<script>
+// Quiz responses. Local only: nothing is scored, stored, or sent.
+document.querySelectorAll("#quiz .q").forEach(function (q) {
+  q.querySelectorAll("button[data-a]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var box = document.getElementById("verdict");
+      var txt = document.getElementById("verdict-text");
+      txt.textContent = btn.dataset.a;
+      box.style.display = "block";
+    });
+  });
+});
+</script>
+</body>
+</html>
