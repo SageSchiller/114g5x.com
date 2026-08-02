@@ -37,6 +37,7 @@
     uniform vec2  u_res;
     uniform float u_time;
     uniform vec2  u_mouse;
+    uniform float u_mode;   // 0 = solo, 1 = squad. Lerped, never snapped.
 
     float hash(vec2 p) {
       return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -69,15 +70,22 @@
       // Deep base. Everything else adds light on top of near-black.
       vec3 col = vec3(0.018, 0.026, 0.040);
 
-      // Two drifting noise fields: cold cyan, hot magenta.
+      // Mode palette. Solo is cold cyan against hot magenta; squad drops
+      // the magenta entirely and reads green, as though the readout were
+      // nominal. Mixed per-pixel so the change sweeps rather than cuts.
+      vec3 cA     = mix(vec3(0.00, 0.55, 0.78), vec3(0.42, 0.85, 0.15), u_mode);
+      vec3 cB     = mix(vec3(0.72, 0.10, 0.44), vec3(0.00, 0.55, 0.78), u_mode);
+      vec3 cBloom = mix(vec3(0.00, 0.42, 0.60), vec3(0.28, 0.60, 0.10), u_mode);
+
+      // Two drifting noise fields.
       float n1 = fbm(uv * 2.2 + vec2(t, -t * 0.6));
       float n2 = fbm(uv * 3.4 - vec2(t * 0.8, t * 0.35));
-      col += vec3(0.00, 0.55, 0.78) * pow(n1, 3.5) * 0.38;
-      col += vec3(0.72, 0.10, 0.44) * pow(n2, 4.0) * 0.34;
+      col += cA * pow(n1, 3.5) * 0.38;
+      col += cB * pow(n2, 4.0) * 0.34;
 
       // Cursor bloom, so the page reacts to the pointer.
       float md = length(uv - u_mouse);
-      col += vec3(0.0, 0.42, 0.60) * smoothstep(0.55, 0.0, md) * 0.16;
+      col += cBloom * smoothstep(0.55, 0.0, md) * 0.16;
 
       // Receding perspective grid, confined to the very bottom so it reads
       // as a horizon rather than washing over the copy.
@@ -89,13 +97,15 @@
         float line  = min(cell.x, cell.y);
         float glow  = smoothstep(0.032, 0.0, line);
         float fade  = smoothstep(0.55, 0.0, g.y);
-        col += vec3(0.0, 0.78, 0.98) * glow * fade * 0.22;
+        vec3 cGrid = mix(vec3(0.00, 0.78, 0.98), vec3(0.50, 0.95, 0.18), u_mode);
+        col += cGrid * glow * fade * 0.22;
       }
 
       // Slow scan bar sweeping vertically.
       float sweep = fract(u_time * 0.035);
       float band  = smoothstep(0.035, 0.0, abs(uv.y + 0.5 - sweep * 1.0));
-      col += vec3(0.0, 0.45, 0.65) * band * 0.18;
+      vec3 cBand  = mix(vec3(0.00, 0.45, 0.65), vec3(0.30, 0.62, 0.12), u_mode);
+      col += cBand * band * 0.18;
 
       // CRT-ish scanlines and grain.
       col *= 0.90 + 0.10 * sin(frag.y * 2.1);
@@ -147,6 +157,12 @@
   const uRes   = gl.getUniformLocation(prog, "u_res");
   const uTime  = gl.getUniformLocation(prog, "u_time");
   const uMouse = gl.getUniformLocation(prog, "u_mouse");
+  const uMode  = gl.getUniformLocation(prog, "u_mode");
+
+  // Eased toward the target so the background sweeps between palettes
+  // instead of cutting. Read from the DOM each frame: script.js owns the
+  // class, this just follows it.
+  let mode = document.body.classList.contains("squad-mode") ? 1 : 0;
 
   let mouse = [0, 0];
   let target = [0, 0];
@@ -179,24 +195,32 @@
     resize();
     mouse[0] += (target[0] - mouse[0]) * 0.05;
     mouse[1] += (target[1] - mouse[1]) * 0.05;
+    const modeTarget = document.body.classList.contains("squad-mode") ? 1 : 0;
+    mode += (modeTarget - mode) * 0.045;
     gl.uniform2f(uRes, canvas.width, canvas.height);
     gl.uniform1f(uTime, (now - start) / 1000);
     gl.uniform2f(uMouse, mouse[0], mouse[1]);
+    gl.uniform1f(uMode, mode);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     raf = requestAnimationFrame(frame);
   }
 
   if (reduced) {
     // Render a single static frame so the page still has depth.
-    resize();
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, 12.0);
-    gl.uniform2f(uMouse, 0, 0);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    window.addEventListener("resize", () => {
+    const paint = () => {
       resize();
       gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, 12.0);
+      gl.uniform2f(uMouse, 0, 0);
+      gl.uniform1f(uMode, document.body.classList.contains("squad-mode") ? 1 : 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+    paint();
+    window.addEventListener("resize", paint);
+    // There is no animation loop on this path, so a mode change has to
+    // force a repaint or the background stays on the palette it loaded with.
+    new MutationObserver(paint).observe(document.body, {
+      attributes: true, attributeFilter: ["class"],
     });
   } else {
     raf = requestAnimationFrame(frame);

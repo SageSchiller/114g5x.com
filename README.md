@@ -20,6 +20,39 @@ site. It defaults to solo and persists in `localStorage` under `x_squad`.
 Any element with `data-solo` and `data-squad` attributes gets swapped, so
 new copy picks this up automatically.
 
+## The two modes are two colour schemes
+
+The toggle repaints the entire site, shader included.
+
+- **SOLO**: cyan against magenta. Cold, and everything reads flagged.
+- **SQUAD**: acid green against cyan. The magenta disappears completely and
+  the whole interface reads nominal, while the numbers stay exactly as bad.
+  That contradiction is the joke; keep it if you retheme.
+
+**How it is wired.** Components never reference the raw palette
+(`--cyan`, `--magenta`). They use the semantic `--accent` / `--accent2`
+pair, plus `--accent-rgb` / `--accent2-rgb` channel variables for every
+`rgba()` glow and border. `body.squad-mode` overrides those four, and
+`bg.js` watches the same class and eases a `u_mode` uniform from 0 to 1,
+mixing the shader's five colours per pixel so the background sweeps.
+
+Three things that will bite anyone editing this:
+
+- **Never hardcode `rgba(0, 240, 255, …)` again.** Those do not follow a
+  variable swap. Use `rgba(var(--accent-rgb), …)`. Converting the original
+  32 hardcoded values is what made theming possible at all.
+- **The body class is `squad-mode`, not `squad`.** The toggle buttons carry
+  class `squad`, so naming the body class the same made
+  `querySelectorAll(".squad")` match the body too, which then collected an
+  `.on` class and an `aria-pressed` attribute it had no business having.
+- **Order of operations in `paintSquad()` is load-bearing.** The `shifting`
+  transition class must be added, and a style flush forced
+  (`void document.body.offsetWidth`), *before* `squad-mode` toggles. Do both
+  in one frame and the computed colours stay stuck on their old values: the
+  transition never observes a start state, so nothing animates. The
+  variables update correctly and the colours simply do not follow, which is
+  a confusing thing to debug.
+
 ## Stack
 
 Dependency-free static site. No framework, npm, backend, build step,

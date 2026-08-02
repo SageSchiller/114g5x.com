@@ -31,8 +31,27 @@
 
   function squadOn() { return localStorage.getItem("x_squad") === "1"; }
 
-  function paintSquad() {
+  let shiftTimer = null;
+
+  function paintSquad(animate) {
     const on = squadOn();
+
+    // Ordering matters here. The transition must be in effect BEFORE the
+    // custom properties change, with a style flush between the two. Enabling
+    // the transition and swapping the variables in the same frame leaves the
+    // computed colours stuck on their old values: the transition never sees a
+    // start state, so it has nothing to animate from.
+    if (animate && !reduced) {
+      document.body.classList.add("shifting");
+      void document.body.offsetWidth;              // force a style flush
+      clearTimeout(shiftTimer);
+      shiftTimer = setTimeout(() => document.body.classList.remove("shifting"), 900);
+    }
+
+    // body.squad-mode swaps the accent variables; bg.js watches the same class
+    // and eases the shader palette across to match.
+    document.body.classList.toggle("squad-mode", on);
+
     document.querySelectorAll("[data-solo]").forEach((el) => {
       el.textContent = on ? el.dataset.squad : el.dataset.solo;
     });
@@ -48,7 +67,7 @@
     document.querySelectorAll(".squad").forEach((b) => {
       b.addEventListener("click", () => {
         localStorage.setItem("x_squad", squadOn() ? "0" : "1");
-        paintSquad();
+        paintSquad(true);
       });
     });
     paintSquad();
